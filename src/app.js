@@ -1,9 +1,23 @@
 import 'jquery';
+import {inject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-fetch-client';
+import {ApplicationState} from 'global/applicationstate';
 
+@inject(ApplicationState, HttpClient)
 export class App {
-  constructor() {
-    this.message = 'Hello World!';
-    this.butter = 'I am butter!';
+  constructor(appState, http) {
+    this.state = appState;
+    this.http = http;
+
+    http.configure(config => {
+      config
+        .withBaseUrl(this.state.config.baseUrl)
+        .withDefaults({
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+    });
   }
 
   configureRouter(config, router) {

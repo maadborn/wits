@@ -5,16 +5,24 @@ export class ApplicationConfig {
 
     this.defaultLocationId = 2716758;
 
+
     this.setUrls();
   }
 
   setUrls() {
     const urlFactory = new UrlFactory();
+    this.urls = urlFactory.getUrls('http://localhost:5100/');
+
+    this.baseUrl = '';
 
     if (this.environment === Environments.DEV) {
-      this.urls = urlFactory.getUrls('http://localhost:5100');
+      this.baseUrl = 'http://localhost:5100/';
     } else if (this.environment === Environments.TEST) {
-      this.urls = urlFactory.getUrls('http://192.168.1.159:5100');
+      this.baseUrl = 'http://192.168.1.159:5100/';
+    }
+
+    if (!this.baseUrl) {
+      throw new Error('No baseUrl set');
     }
   }
 }
@@ -28,8 +36,8 @@ const Environments = {
 class UrlFactory {
   getUrls(baseUrl) {
     return {
-      getAllWeatherData: `${baseUrl}/weather`,
-      getWeatherDataFor: `${baseUrl}/custom/weather`,
+      getAllWeatherData: 'weather',
+      getWeatherDataFor: 'custom/weather',
     };
   }
 }
